@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNGPL GHG Reporting Input Forms</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #f4f7fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background: #003f5c;
+            color: white;
+            padding: 24px 32px;
+        }
+        header h1 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 1.8rem;
+        }
+        header p {
+            margin: 8px 0 0;
+            opacity: 0.8;
+        }
+        .summary-bar {
+            background: #eef2f5;
+            padding: 16px 32px;
+            display: flex;
+            gap: 40px;
+            border-bottom: 1px solid #d0dde7;
+        }
+        .summary-item {
+            font-size: 1.1rem;
+        }
+        .summary-item span {
+            font-weight: 700;
+            color: #003f5c;
+        }
+        .tabs {
+            display: flex;
+            background: #f9fbfd;
+            border-bottom: 2px solid #d0dde7;
+            padding-left: 32px;
+        }
+        .tab-btn {
+            padding: 14px 28px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5c6b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            color: #003f5c;
+            border-bottom-color: #003f5c;
+        }
+        .tab-content {
+            padding: 32px;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .section-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f2f6f9;
+            padding: 16px 24px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e2f3d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section-header .tooltip {
+            display: inline-block;
+            background: #809aab;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: help;
+            margin-left: 8px;
+        }
+        .section-body {
+            padding: 24px;
+            display: block;
+        }
+        .section-body.collapsed {
+            display: none;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: flex-end;
+        }
+        .form-group {
+            flex: 1 1 200px;
+            min-width: 180px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: white;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #003f5c;
+            box-shadow: 0 0 0 3px rgba(0,63,92,0.2);
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 6px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 400;
+            text-transform: none;
+        }
+        .calc-result {
+            background: #eaf4fc;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .calc-result .value {
+            font-size: 1.5rem;
+            color: #003f5c;
+        }
+        button {
+            background: #003f5c;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #002a3b;
+        }
+        .inline-hint {
+            font-size: 0.8rem;
+            color: #5e6f7e;
+            margin-top: 4px;
+        }
+        hr {
+            border: none;
+            border-top: 1px dashed #cbd5e1;
+            margin: 24px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🌍 SNGPL GHG Emissions Data Entry</h1>
+        <p>Based on SNGPL GHG Reporting Framework · IPCC AR6 GWP (CH₄=29.8, N₂O=273)</p>
+    </header>
+
+    <!-- Summary Bar -->
+    <div class="summary-bar" id="summaryBar">
+        <div class="summary-item">Scope 1: <span id="totalScope1">0.00</span> tCO₂e</div>
+        <div class="summary-item">Scope 2: <span id="totalScope2">0.00</span> tCO₂e</div>
+        <div class="summary-item">Scope 3: <span id="totalScope3">0.00</span> tCO₂e</div>
+        <div class="summary-item">Total: <span id="totalAll">0.00</span> tCO₂e</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="scope1">Scope 1 (Direct)</button>
+        <button class="tab-btn" data-tab="scope2">Scope 2 (Indirect)</button>
+        <button class="tab-btn" data-tab="scope3">Scope 3 (Other)</button>
+    </div>
+
+    <!-- Tab Panes -->
+    <div class="tab-content">
+        <!-- SCOPE 1 PANE -->
+        <div class="tab-pane active" id="scope1">
+            <!-- Stationary Combustion -->
+            <div class="section-card">
+                <div class="section-header" onclick="toggleSection('stationaryBody')">
+                    🔥 Stationary Combustion <span class="tooltip" title="IPCC Table 7 / Section 10">ⓘ</span>
+                </div>
+                <div class="section-body" id="stationaryBody">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fuel Type</label>
+                            <select id="stationaryFuel">
+                                <option value="natural_gas">Natural Gas</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="lpg">LPG</option>
+                                <option value="petrol">Petrol</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Consumption</label>
+                            <input type="number" id="stationaryConsumption" step="0.01" min="0" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Unit</label>
+                            <select id="stationaryUnit">
+                                <option value="m3">m³</option>
+                                <option value="kg">kg</option>
+                                <option value="TJ">TJ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>EF Source</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="stationaryEF" value="ipcc" checked> IPCC Default</label>
+                                <label><input type="radio" name="stationaryEF" value="custom"> Site‑specific</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="stationaryCustom" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group"><label>CO₂ EF (kg/TJ)</label><input type="number" id="stationaryCO2ef" step="0.1" value="56100"></div>
+                            <div class="form-group"><label>CH₄ EF (kg/TJ)</label><input type="number" id="stationaryCH4ef" step="0.1" value="1"></div>
+                            <div class="form-group"><label>N₂O EF (kg/TJ)</label><input type="number" id="stationaryN2Oef" step="0.1" value="0.1"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>GWP CH₄</label><input type="number" id="gwpCH4" step="0.1" value="29.8"></div>
+                        <div class="form-group"><label>GWP N₂O</label><input type="number" id="gwpN2O" step="0.1" value="273"></div>
+                    </div>
+                    <button onclick="calculateStationary()">Calculate Stationary</button>
+                    <div class="calc-result">
+                        <span>Emissions (tCO₂e)</span>
+                        <span class="value" id="stationaryResult">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Combustion -->
+            <div class="section-card">
+                <div class="section-header" onclick="toggleSection('mobileBody')">
+                    🚛 Mobile Combustion <span class="tooltip" title="Section 10.4 / Table 7">ⓘ</span>
+                </div>
+                <div class="section-body" id="mobileBody">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Calculation Mode</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="mobileMode" value="fuel" checked> Fuel‑based</label>
+                                <label><input type="radio" name="mobileMode" value="distance"> Distance‑based</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fuel-based fields -->
+                    <div id="mobileFuelFields">
+                        <div class="form-row">
+                            <div class="form-group"><label>Fuel Type</label>
+                                <select id="mobileFuelType">
+                                    <option value="diesel">Diesel</option>
+                                    <option value="petrol">Petrol</option>
+                                    <option value="cng">CNG</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Fuel Used (liters)</label><input type="number" id="mobileFuelAmount" step="0.1" value="500"></div>
+                        </div>
+                    </div>
+                    <!-- Distance-based fields (hidden initially) -->
+                    <div id="mobileDistanceFields" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group"><label>Vehicle Type</label><input type="text" id="mobileVehicle" value="Pickup"></div>
+                            <div class="form-group"><label>Distance (km)</label><input type="number" id="mobileDistance" step="0.1" value="1000"></div>
+                            <div class="form-group"><label>Fuel Economy (km/l)</label><input type="number" id="mobileEconomy" step="0.1" value="8"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>EF Source</label>
+                            <select id="mobileEFSource">
+                                <option value="ipcc">IPCC Default</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="mobileCustomEF" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group"><label>CO₂ EF (kg/TJ)</label><input type="number" id="mobileCO2ef" value="74100"></div>
+                            <div class="form-group"><label>CH₄ EF (kg/TJ)</label><input type="number" id="mobileCH4ef" value="3.9"></div>
+                            <div class="form-group"><label>N₂O EF (kg/TJ)</label><input type="number" id="mobileN2Oef" value="3.9"></div>
+                        </div>
+                    </div>
+                    <button onclick="calculateMobile()">Calculate Mobile</button>
+                    <div class="calc-result">
+                        <span>Emissions (tCO₂e)</span>
+                        <span class="value" id="mobileResult">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fugitive Emissions (simplified) -->
+            <div class="section-card">
+                <div class="section-header" onclick="toggleSection('fugitiveBody')">
+                    💨 Fugitive & Venting <span class="tooltip" title="Sections 12 & 13">ⓘ</span>
+                </div>
+                <div class="section-body" id="fugitiveBody">
+                    <h4>Pipeline Leaks (UFG)</h4>
+                    <div class="form-row">
+                        <div class="form-group"><label>Pipeline Length (km)</label><input type="number" id="pipelineKm" step="0.1" value="500"></div>
+                        <div class="form-group"><label>Emission Factor (tCH₄/km)</label><input type="number" id="pipeEF" step="0.001" value="0.05"></div>
+                    </div>
+                    <h4 style="margin-top:20px;">Flaring</h4>
+                    <div class="form-row">
+                        <div class="form-group"><label>Gas Flared (1000 m³)</label><input type="number" id="flareVolume" step="0.1" value="10"></div>
+                        <div class="form-group"><label>Methane Fraction (%)</label><input type="number" id="flareCH4pct" step="0.1" value="90"></div>
+                        <div class="form-group"><label>Destruction Efficiency (%)</label><input type="number" id="flareEff" step="0.1" value="98"></div>
+                    </div>
+                    <button onclick="calculateFugitive()">Calculate Fugitive</button>
+                    <div class="calc-result">
+                        <span>Total Fugitive (tCO₂e)</span>
+                        <span class="value" id="fugitiveResult">0.00</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Scope 1 total line (will be updated) -->
+            <div style="background:#003f5c10; border-radius:12px; padding:16px; margin-top:16px;">
+                <strong>Scope 1 Total:</strong> <span id="scope1TotalDisplay">0.00</span> tCO₂e
+            </div>
+        </div>
+
+        <!-- SCOPE 2 PANE -->
+        <div class="tab-pane" id="scope2">
+            <div class="section-card">
+                <div class="section-header">⚡ Purchased Electricity</div>
+                <div class="section-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Method</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="scope2method" value="location" checked> Location‑based</label>
+                                <label><input type="radio" name="scope2method" value="market"> Market‑based</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Consumption (MWh)</label><input type="number" id="electricityMWh" step="0.1" value="1000"></div>
+                    </div>
+                    <div id="locationBased">
+                        <div class="form-row">
+                            <div class="form-group"><label>Grid EF (tCO₂/MWh)</label><input type="number" id="gridEF" step="0.001" value="0.45"></div>
+                        </div>
+                    </div>
+                    <div id="marketBased" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group"><label>Supplier EF (tCO₂/MWh)</label><input type="number" id="supplierEF" step="0.001" value="0.1"></div>
+                            <div class="form-group"><label>Renewable fraction (%)</label><input type="number" id="renewablePct" step="1" value="0"></div>
+                        </div>
+                    </div>
+                    <button onclick="calculateScope2()">Calculate Scope 2</button>
+                    <div class="calc-result">
+                        <span>Scope 2 Emissions (tCO₂e)</span>
+                        <span class="value" id="scope2Result">0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCOPE 3 PANE (simplified material categories) -->
+        <div class="tab-pane" id="scope3">
+            <div class="section-card">
+                <div class="section-header">📦 Cat.1 Purchased Goods & Services</div>
+                <div class="section-body">
+                    <div class="form-row">
+                        <div class="form-group"><label>Spend (million PKR)</label><input type="number" id="spend" step="0.1" value="500"></div>
+                        <div class="form-group"><label>EF (kgCO₂e/PKR)</label><input type="number" id="spendEF" step="0.001" value="0.02"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-header">⛽ Cat.3 Fuel & Energy Activities</div>
+                <div class="section-body">
+                    <div class="form-row">
+                        <div class="form-group"><label>Gas received (million m³)</label><input type="number" id="gasReceived" step="0.1" value="1000"></div>
+                        <div class="form-group"><label>Upstream EF (tCO₂e/million m³)</label><input type="number" id="upstreamEF" step="0.1" value="500"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-header">🔥 Cat.11 Use of Sold Products</div>
+                <div class="section-body">
+                    <div class="form-row">
+                        <div class="form-group"><label>Gas sold (million m³)</label><input type="number" id="gasSold" step="0.1" value="900"></div>
+                        <div class="form-group"><label>Combustion EF (tCO₂e/million m³)</label><input type="number" id="combustionEF" step="0.1" value="2000"></div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="calculateScope3()" style="margin: 0 0 24px 24px;">Calculate Scope 3</button>
+            <div style="padding:0 24px 24px;">
+                <div class="calc-result">
+                    <span>Scope 3 Total (tCO₂e)</span>
+                    <span class="value" id="scope3Result">0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- Helper functions ----------
+    function toggleSection(id) {
+        const el = document.getElementById(id);
+        if (el.style.display === 'none') el.style.display = 'block';
+        else el.style.display = 'none';
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Show/hide custom EF fields in stationary
+    document.querySelectorAll('input[name="stationaryEF"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.getElementById('stationaryCustom').style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+    });
+
+    // Show/hide mobile distance fields
+    document.querySelectorAll('input[name="mobileMode"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const isFuel = this.value === 'fuel';
+            document.getElementById('mobileFuelFields').style.display = isFuel ? 'block' : 'none';
+            document.getElementById('mobileDistanceFields').style.display = isFuel ? 'none' : 'block';
+        });
+    });
+
+    // Show/hide custom EF for mobile
+    document.getElementById('mobileEFSource').addEventListener('change', function(e) {
+        document.getElementById('mobileCustomEF').style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    // Show/hide location/market based for scope2
+    document.querySelectorAll('input[name="scope2method"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const isLocation = this.value === 'location';
+            document.getElementById('locationBased').style.display = isLocation ? 'block' : 'none';
+            document.getElementById('marketBased').style.display = isLocation ? 'none' : 'block';
+        });
+    });
+
+    // IPCC stationary default factors (kg/TJ)
+    const ipccStationary = {
+        natural_gas: { co2: 56100, ch4: 1, n2o: 0.1 },
+        diesel:      { co2: 74100, ch4: 3, n2o: 0.6 },
+        lpg:         { co2: 63100, ch4: 1, n2o: 0.1 },
+        petrol:      { co2: 69300, ch4: 3, n2o: 0.6 }
+    };
+
+    // IPCC mobile default factors (kg/TJ) - simplified from Table 7
+    const ipccMobile = {
+        diesel: { co2: 74100, ch4: 3.9, n2o: 3.9 },
+        petrol: { co2: 69300, ch4: 3.8, n2o: 5.7 },
+        cng:    { co2: 56100, ch4: 3, n2o: 0.1 }  // approximate
+    };
+
+    // Convert consumption to TJ (very simplified)
+    function convertToTJ(amount, fuel, unit) {
+        // Rough conversions for demo – in reality would use net calorific values
+        if (unit === 'TJ') return amount;
+        if (fuel === 'natural_gas' && unit === 'm3') return amount * 0.036; // 36 MJ/m³ approx
+        if (fuel === 'diesel' && unit === 'kg') return amount * 0.043; // 43 MJ/kg
+        if (fuel === 'diesel' && unit === 'liters') return amount * 0.036; // ~36 MJ/l
+        if (fuel === 'lpg' && unit === 'kg') return amount * 0.046;
+        if (fuel === 'petrol' && unit === 'liters') return amount * 0.032;
+        return amount * 0.001; // fallback
+    }
+
+    // GWP values (global, can be changed by user)
+    let gwpCH4 = 29.8, gwpN2O = 273;
+
+    function updateGWP() {
+        gwpCH4 = parseFloat(document.getElementById('gwpCH4').value) || 29.8;
+        gwpN2O = parseFloat(document.getElementById('gwpN2O').value) || 273;
+    }
+
+    // ----- Stationary calculation -----
+    function calculateStationary() {
+        updateGWP();
+        const fuel = document.getElementById('stationaryFuel').value;
+        let amount = parseFloat(document.getElementById('stationaryConsumption').value) || 0;
+        const unit = document.getElementById('stationaryUnit').value;
+        const efSource = document.querySelector('input[name="stationaryEF"]:checked').value;
+
+        let energyTJ = convertToTJ(amount, fuel, unit);
+        let efCO2, efCH4, efN2O;
+        if (efSource === 'ipcc') {
+            const def = ipccStationary[fuel] || ipccStationary.natural_gas;
+            efCO2 = def.co2;
+            efCH4 = def.ch4;
+            efN2O = def.n2o;
+        } else {
+            efCO2 = parseFloat(document.getElementById('stationaryCO2ef').value) || 0;
+            efCH4 = parseFloat(document.getElementById('stationaryCH4ef').value) || 0;
+            efN2O = parseFloat(document.getElementById('stationaryN2Oef').value) || 0;
+        }
+
+        const co2 = energyTJ * efCO2 / 1000;          // tonnes
+        const ch4 = energyTJ * efCH4 / 1000;
+        const n2o = energyTJ * efN2O / 1000;
+        const total = co2 + ch4 * gwpCH4 + n2o * gwpN2O;
+        document.getElementById('stationaryResult').innerText = total.toFixed(2);
+        updateScope1Total();
+    }
+
+    // ----- Mobile calculation -----
+    function calculateMobile() {
+        updateGWP();
+        const mode = document.querySelector('input[name="mobileMode"]:checked').value;
+        let fuelAmount = 0;
+        let fuelType = 'diesel';
+        if (mode === 'fuel') {
+            fuelAmount = parseFloat(document.getElementById('mobileFuelAmount').value) || 0;
+            fuelType = document.getElementById('mobileFuelType').value;
+        } else {
+            const dist = parseFloat(document.getElementById('mobileDistance').value) || 0;
+            const econ = parseFloat(document.getElementById('mobileEconomy').value) || 1;
+            fuelAmount = dist / econ;  // liters
+            // assume diesel for distance mode
+            fuelType = 'diesel';
+        }
+
+        // Convert liters to TJ (rough)
+        let energyTJ = 0;
+        if (fuelType === 'diesel') energyTJ = fuelAmount * 0.036;
+        else if (fuelType === 'petrol') energyTJ = fuelAmount * 0.032;
+        else if (fuelType === 'cng') energyTJ = fuelAmount * 0.020; // kg equivalent?
+
+        const efSource = document.getElementById('mobileEFSource').value;
+        let efCO2, efCH4, efN2O;
+        if (efSource === 'ipcc') {
+            const def = ipccMobile[fuelType] || ipccMobile.diesel;
+            efCO2 = def.co2;
+            efCH4 = def.ch4;
+            efN2O = def.n2o;
+        } else {
+            efCO2 = parseFloat(document.getElementById('mobileCO2ef').value) || 0;
+            efCH4 = parseFloat(document.getElementById('mobileCH4ef').value) || 0;
+            efN2O = parseFloat(document.getElementById('mobileN2Oef').value) || 0;
+        }
+
+        const co2 = energyTJ * efCO2 / 1000;
+        const ch4 = energyTJ * efCH4 / 1000;
+        const n2o = energyTJ * efN2O / 1000;
+        const total = co2 + ch4 * gwpCH4 + n2o * gwpN2O;
+        document.getElementById('mobileResult').innerText = total.toFixed(2);
+        updateScope1Total();
+    }
+
+    // ----- Fugitive calculation (simplified) -----
+    function calculateFugitive() {
+        updateGWP();
+        const pipeKm = parseFloat(document.getElementById('pipelineKm').value) || 0;
+        const pipeEF = parseFloat(document.getElementById('pipeEF').value) || 0;
+        const leakCH4 = pipeKm * pipeEF; // tonnes CH4
+        const leakCO2e = leakCH4 * gwpCH4;
+
+        const flareVol = parseFloat(document.getElementById('flareVolume').value) || 0; // 1000 m³
+        const ch4Pct = (parseFloat(document.getElementById('flareCH4pct').value) || 0) / 100;
+        const destEff = (parseFloat(document.getElementById('flareEff').value) || 0) / 100;
+        // CH4 mass: 1000 m³ * ch4Pct * density (0.67 kg/m³ approx) /1000 = tonnes
+        const ch4Mass = flareVol * 1000 * ch4Pct * 0.67 / 1000; // tonnes
+        const ch4Emitted = ch4Mass * (1 - destEff);
+        const flareCO2e = ch4Emitted * gwpCH4;
+
+        const total = leakCO2e + flareCO2e;
+        document.getElementById('fugitiveResult').innerText = total.toFixed(2);
+        updateScope1Total();
+    }
+
+    // Update Scope 1 total by summing stationary+mobile+fugitive results
+    function updateScope1Total() {
+        const stat = parseFloat(document.getElementById('stationaryResult').innerText) || 0;
+        const mob = parseFloat(document.getElementById('mobileResult').innerText) || 0;
+        const fug = parseFloat(document.getElementById('fugitiveResult').innerText) || 0;
+        const total = stat + mob + fug;
+        document.getElementById('scope1TotalDisplay').innerText = total.toFixed(2);
+        document.getElementById('totalScope1').innerText = total.toFixed(2);
+        updateTotalAll();
+    }
+
+    // ----- Scope 2 -----
+    function calculateScope2() {
+        const mwh = parseFloat(document.getElementById('electricityMWh').value) || 0;
+        const method = document.querySelector('input[name="scope2method"]:checked').value;
+        let ef = 0;
+        if (method === 'location') {
+            ef = parseFloat(document.getElementById('gridEF').value) || 0;
+        } else {
+            ef = parseFloat(document.getElementById('supplierEF').value) || 0;
+            const renew = parseFloat(document.getElementById('renewablePct').value) || 0;
+            ef = ef * (1 - renew/100);
+        }
+        const total = mwh * ef;
+        document.getElementById('scope2Result').innerText = total.toFixed(2);
+        document.getElementById('totalScope2').innerText = total.toFixed(2);
+        updateTotalAll();
+    }
+
+    // ----- Scope 3 -----
+    function calculateScope3() {
+        const spend = (parseFloat(document.getElementById('spend').value) || 0) * 1e6; // PKR
+        const spendEF = parseFloat(document.getElementById('spendEF').value) || 0; // kgCO2e/PKR
+        const cat1 = spend * spendEF / 1000; // tonnes
+
+        const gasRec = parseFloat(document.getElementById('gasReceived').value) || 0;
+        const upEF = parseFloat(document.getElementById('upstreamEF').value) || 0; // tCO2e/million m³
+        const cat3 = gasRec * upEF;
+
+        const gasSold = parseFloat(document.getElementById('gasSold').value) || 0;
+        const combEF = parseFloat(document.getElementById('combustionEF').value) || 0;
+        const cat11 = gasSold * combEF;
+
+        const total = cat1 + cat3 + cat11;
+        document.getElementById('scope3Result').innerText = total.toFixed(2);
+        document.getElementById('totalScope3').innerText = total.toFixed(2);
+        updateTotalAll();
+    }
+
+    function updateTotalAll() {
+        const s1 = parseFloat(document.getElementById('totalScope1').innerText) || 0;
+        const s2 = parseFloat(document.getElementById('totalScope2').innerText) || 0;
+        const s3 = parseFloat(document.getElementById('totalScope3').innerText) || 0;
+        document.getElementById('totalAll').innerText = (s1 + s2 + s3).toFixed(2);
+    }
+
+    // Run initial calculations to populate
+    window.onload = function() {
+        calculateStationary();
+        calculateMobile();
+        calculateFugitive();
+        calculateScope2();
+        calculateScope3();
+    };
+</script>
+</body>
+</html>
